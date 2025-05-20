@@ -6,7 +6,7 @@ aqua: 60,212,252
 ordo: 213,212,236
 perditio: 64,64,64
 alienis: 128,80,128
-arbor: 192,255,192
+arbor: 135,101,49
 auram: 255,192,255
 bestia: 159,100,9
 cognitio: 255,194,179
@@ -58,7 +58,7 @@ tempus: 182,140,255
 electrum: 192,238,238
 magneto: 192,192,192
 nebrisum: 238,238,126
-radio: 135,101,49
+radio: 192,255,192
 strontio: 238,194,179
 exubitor: 守护
 citrus: 柑橘
