@@ -313,25 +313,54 @@ class OverlayWindow(QtWidgets.QWidget):
 
 
     def mov(self):
+        print(f"[DEBUG] mov() called, self.res length: {len(self.res)}")
+        if len(self.res) == 0:
+            print("[WARNING] self.res is empty, please run Ctrl+8 first")
+            return
+            
         is_ok = set()
+        print(f"[DEBUG] Starting mov() with {len(self.res)} results")
 
-        for ans in self.res:
-            for jj in range(0, len(ans[0])-1):
-                if ans[0][jj] in is_ok:
-                    continue
-                is_ok.add(ans[0][jj])
-                be = self.grid_map[self.serah[ans[0][jj]]]
-                bs = self.element_boxes_have[ans[1][jj]]
-                # 起始位置（你要拖动的东西的位置）
-                start_x, start_y = bs.x + 24, bs.y + 24
-                # 目标位置（你要拖动到哪里）
-                end_x, end_y = be.x + 24, be.y + 24
+        for i, ans in enumerate(self.res):
+            print(f"[DEBUG] Processing result {i}: {ans}")
+            try:
+                for jj in range(0, len(ans[0])-1):
+                    if ans[0][jj] in is_ok:
+                        continue
+                    is_ok.add(ans[0][jj])
+                    print(f"[DEBUG] Moving element {jj}")
+                    
+                    # 获取目标位置
+                    be_key = ans[0][jj]
+                    be = self.grid_map[self.serah[be_key]]
+                    print(f"[DEBUG] Target position: ({be.x}, {be.y})")
+                    
+                    # 获取源位置
+                    bs_key = ans[1][jj]
+                    if bs_key not in self.element_boxes_have:
+                        print(f"[WARNING] Element {bs_key} not found in element_boxes_have")
+                        continue
+                    bs = self.element_boxes_have[bs_key]
+                    print(f"[DEBUG] Source position: ({bs.x}, {bs.y})")
+                    
+                    # 起始位置（你要拖动的东西的位置）
+                    start_x, start_y = bs.x + 24, bs.y + 24
+                    # 目标位置（你要拖动到哪里）
+                    end_x, end_y = be.x + 24, be.y + 24
 
-                pydirectinput.moveTo(start_x, start_y)
-                pydirectinput.mouseDown()
-                sleep(0.1)
-                pydirectinput.moveTo(end_x, end_y, duration=0.3)
-                pydirectinput.mouseUp()
+                    print(f"[DEBUG] Moving from ({start_x}, {start_y}) to ({end_x}, {end_y})")
+                    pydirectinput.moveTo(start_x, start_y)
+                    pydirectinput.mouseDown()
+                    sleep(0.1)
+                    pydirectinput.moveTo(end_x, end_y, duration=0.3)
+                    pydirectinput.mouseUp()
+                    print(f"[DEBUG] Move completed")
+            except Exception as e:
+                print(f"[ERROR] Error in mov() loop: {e}")
+                import traceback
+                traceback.print_exc()
+        
+        print(f"[DEBUG] mov() completed")
 
     def paintEvent(self, ev):
         p = QtGui.QPainter(self)
